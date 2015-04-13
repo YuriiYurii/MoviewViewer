@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-import java.util.List;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import yuriitsap.example.com.movieviewer.model.Movie;
+import yuriitsap.example.com.movieviewer.model.Page;
 import yuriitsap.example.com.movieviewer.utils.MovieClient;
 import yuriitsap.example.com.movieviewer.utils.MovieService;
 
@@ -25,9 +23,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         Callback<Page> movies = new Callback<Page>() {
             @Override
-            public void success(Page movies, Response response) {
+            public void success(Page page, Response response) {
                 Log.e("TAG", "Success");
-                Log.e("TAG", " movies = " + movies);
+                Log.e("TAG", " Page with movies = " + page);
             }
 
             @Override
@@ -43,15 +41,4 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    public class Page {
-
-        public List<Movie> mMovies;
-
-        @Override
-        public String toString() {
-            return "Page{" +
-                    "mMovies=" + mMovies +
-                    '}';
-        }
-    }
 }

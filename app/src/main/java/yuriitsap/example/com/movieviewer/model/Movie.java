@@ -13,8 +13,8 @@ public class Movie {
     private boolean mAdult;
     @SerializedName("budget")
     private int mBudget;
-    @SerializedName("backdrop_path")
-    private String mBackdropPath;
+    @SerializedName("poster_path")
+    private String mPosterPath;
     @SerializedName("imdb_id")
     private String mImdbId;
     @SerializedName("original_title")
@@ -23,6 +23,8 @@ public class Movie {
     private String mOverview;
     @SerializedName("revenue")
     private int mRevenue;
+    @SerializedName("vote_average")
+    private int mRating;
 
     public int getId() {
         return mId;
@@ -46,14 +48,6 @@ public class Movie {
 
     public void setBudget(int budget) {
         mBudget = budget;
-    }
-
-    public String getBackdropPath() {
-        return mBackdropPath;
-    }
-
-    public void setBackdropPath(String backdropPath) {
-        mBackdropPath = backdropPath;
     }
 
     public String getImdbId() {
@@ -88,6 +82,22 @@ public class Movie {
         mRevenue = revenue;
     }
 
+    public String getPosterPath() {
+        return mPosterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        mPosterPath = posterPath;
+    }
+
+    public int getRating() {
+        return mRating;
+    }
+
+    public void setRating(int rating) {
+        mRating = rating;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -108,17 +118,20 @@ public class Movie {
         if (mId != movie.mId) {
             return false;
         }
-        if (mRevenue != movie.mRevenue) {
+        if (mRating != movie.mRating) {
             return false;
         }
-        if (mBackdropPath != null ? !mBackdropPath.equals(movie.mBackdropPath)
-                : movie.mBackdropPath != null) {
+        if (mRevenue != movie.mRevenue) {
             return false;
         }
         if (mImdbId != null ? !mImdbId.equals(movie.mImdbId) : movie.mImdbId != null) {
             return false;
         }
         if (mOverview != null ? !mOverview.equals(movie.mOverview) : movie.mOverview != null) {
+            return false;
+        }
+        if (mPosterPath != null ? !mPosterPath.equals(movie.mPosterPath)
+                : movie.mPosterPath != null) {
             return false;
         }
         if (mTitle != null ? !mTitle.equals(movie.mTitle) : movie.mTitle != null) {
@@ -133,25 +146,12 @@ public class Movie {
         int result = mId;
         result = 31 * result + (mAdult ? 1 : 0);
         result = 31 * result + mBudget;
-        result = 31 * result + (mBackdropPath != null ? mBackdropPath.hashCode() : 0);
+        result = 31 * result + (mPosterPath != null ? mPosterPath.hashCode() : 0);
         result = 31 * result + (mImdbId != null ? mImdbId.hashCode() : 0);
         result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
         result = 31 * result + (mOverview != null ? mOverview.hashCode() : 0);
         result = 31 * result + mRevenue;
+        result = 31 * result + mRating;
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "mId=" + mId +
-                ", mAdult=" + mAdult +
-                ", mBudget=" + mBudget +
-                ", mBackdropPath='" + mBackdropPath + '\'' +
-                ", mImdbId='" + mImdbId + '\'' +
-                ", mTitle='" + mTitle + '\'' +
-                ", mOverview='" + mOverview + '\'' +
-                ", mRevenue=" + mRevenue +
-                '}';
     }
 }
