@@ -9,9 +9,11 @@
 
 
     <LinearLayout
+            android:id="@+id/movie_info_row"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selectable_item_drawable">
 
         <ImageView android:id="@+id/movie_picture_preview"
                    android:layout_width="wrap_content"
@@ -19,15 +21,6 @@
         <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            <View
-                    android:id="@+id/overlay_view"
-                    android:background="@color/accent_material_light"
-                    android:alpha="0.5"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="invisible">
-
-            </View>
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"

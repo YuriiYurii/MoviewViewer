@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w92";
     private ArrayList<Movie> mMovies = new ArrayList<>();
     private MovieListFragment.OnMovieSelectedListener mOnMovieSelectedListener;
+    private int mSelectedItemPosition = 1;
 
     public MovieAdapter(MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
         mOnMovieSelectedListener = onMovieSelectedListener;
@@ -38,12 +40,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
 
     @Override
     public void onBindViewHolder(MovieItemHolder movieItemHolder, int position) {
-        Picasso.with(movieItemHolder.mMoviePriviewImage.getContext())
+        Picasso.with(movieItemHolder.mMoviePreviewImage.getContext())
                 .load(BASE_URL + mMovies.get(position).getPosterPath())
-                .into(movieItemHolder.mMoviePriviewImage);
+                .into(movieItemHolder.mMoviePreviewImage);
         movieItemHolder.mMovieTitleTextView.setText(mMovies.get(position).getTitle());
         movieItemHolder.mMovieRating.setText("Movie rate : " + mMovies.get(position).getRating());
-
+        movieItemHolder.mRow.setActivated(position == mSelectedItemPosition);
     }
 
     @Override
@@ -54,25 +56,29 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
     public class MovieItemHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        private ImageView mMoviePriviewImage;
+        private ImageView mMoviePreviewImage;
+        private LinearLayout mRow;
         private TextView mMovieTitleTextView;
         private TextView mMovieRating;
-        private View mOverlayView;
 
         public MovieItemHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);
-            mMoviePriviewImage = (ImageView) itemView.findViewById(R.id.movie_picture_preview);
+            mMoviePreviewImage = (ImageView) itemView.findViewById(R.id.movie_picture_preview);
+            mRow = (LinearLayout) itemView.findViewById(R.id.movie_info_row);
             mMovieTitleTextView = (TextView) itemView.findViewById(R.id.movie_title);
             mMovieRating = (TextView) itemView.findViewById(R.id.movie_rating);
-            mOverlayView = itemView.findViewById(R.id.overlay_view);
 
         }
 
         @Override
         public void onClick(View v) {
             mOnMovieSelectedListener.onMovieSelected(mMovies.get(getPosition()).getId());
+            int previousPosition = mSelectedItemPosition;
+            mSelectedItemPosition = getPosition();
+            notifyItemChanged(getPosition());
+            notifyItemChanged(previousPosition);
         }
     }
 
