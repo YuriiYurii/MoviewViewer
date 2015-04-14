@@ -25,7 +25,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w92";
     private ArrayList<Movie> mMovies = new ArrayList<>();
     private MovieListFragment.OnMovieSelectedListener mOnMovieSelectedListener;
-    private int mSelectedItemPosition = 1;
+    private int mSelectedItemPosition = -1;
 
     public MovieAdapter(MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
         mOnMovieSelectedListener = onMovieSelectedListener;

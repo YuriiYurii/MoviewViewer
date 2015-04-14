@@ -32,9 +32,11 @@ public class MovieListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
     private OnMovieSelectedListener mOnMovieSelectedListener;
+    private static int lala = 0;
 
 
     public MovieListFragment() {
+        Log.e("TAG", "MovieListFragment count = " + ++lala);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class MovieListFragment extends Fragment {
             }
         });
         mMovieAdapter = new MovieAdapter(mOnMovieSelectedListener);
-        this.setRetainInstance(true);
+//        this.setRetainInstance(true);
     }
 
     @Override
