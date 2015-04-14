@@ -9,6 +9,7 @@ public class MovieClient {
 
     private static final String API_URL = "http://api.themoviedb.org/3";
     private static RestAdapter REST_ADAPTER;
+    private static MovieService mMovieService;
 
     static {
         setupRestClient();
@@ -19,6 +20,9 @@ public class MovieClient {
     }
 
     public static MovieService getMovieService() {
-        return REST_ADAPTER.create(MovieService.class);
+        if (mMovieService == null) {
+            mMovieService = REST_ADAPTER.create(MovieService.class);
+        }
+        return mMovieService;
     }
 }

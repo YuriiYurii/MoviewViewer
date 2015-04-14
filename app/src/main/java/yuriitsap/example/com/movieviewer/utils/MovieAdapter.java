@@ -22,13 +22,11 @@ import yuriitsap.example.com.movieviewer.model.Movie;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHolder> {
 
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w92";
-    private ArrayList<Movie> mMovies;
+    private ArrayList<Movie> mMovies = new ArrayList<>();
     private MovieListFragment.OnMovieSelectedListener mOnMovieSelectedListener;
 
-    public MovieAdapter(ArrayList<Movie> movies,
-            MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
+    public MovieAdapter(MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
         mOnMovieSelectedListener = onMovieSelectedListener;
-        mMovies = movies;
     }
 
     @Override
