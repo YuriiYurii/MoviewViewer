@@ -3,6 +3,7 @@ package yuriitsap.example.com.movieviewer.utils;
 import com.squareup.picasso.Picasso;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import yuriitsap.example.com.movieviewer.R;
 import yuriitsap.example.com.movieviewer.fragments.MovieListFragment;
 import yuriitsap.example.com.movieviewer.model.Movie;
+import yuriitsap.example.com.movieviewer.model.Page;
 
 /**
  * Created by yuriitsap on 13.04.15.
@@ -29,6 +34,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
 
     public MovieAdapter(MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
         mOnMovieSelectedListener = onMovieSelectedListener;
+        MovieClient.getMovieService().getPopularMovies(new Callback<Page>() {
+            @Override
+            public void success(Page page, Response response) {
+                Log.e("TAG", "success");
+                mMovies.addAll(page.getMovies());
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("TAG", "Error");
+
+            }
+        });
     }
 
     @Override

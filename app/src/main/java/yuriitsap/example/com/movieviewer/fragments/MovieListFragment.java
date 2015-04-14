@@ -11,13 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import yuriitsap.example.com.movieviewer.R;
-import yuriitsap.example.com.movieviewer.model.Page;
 import yuriitsap.example.com.movieviewer.utils.MovieAdapter;
-import yuriitsap.example.com.movieviewer.utils.MovieClient;
 
 /**
  * Created by yuriitsap on 13.04.15.
@@ -42,23 +37,7 @@ public class MovieListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        MovieClient.getMovieService().getPopularMovies(new Callback<Page>() {
-            @Override
-            public void success(Page page, Response response) {
-                Log.e("TAG", "success");
-                mMovieAdapter.getMovies().addAll(page.getMovies());
-                mMovieAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("TAG", "Error");
-
-            }
-        });
         mMovieAdapter = new MovieAdapter(mOnMovieSelectedListener);
-//        this.setRetainInstance(true);
     }
 
     @Override

@@ -43,22 +43,10 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            update(savedInstanceState.getInt(CURRENT_ID));
+        if (getArguments() != null) {
+            update(getArguments().getInt(CURRENT_ID));
         }
         return inflater.inflate(R.layout.movie_details, container, false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            update(bundle.getInt(CURRENT_ID));
-        } else if (mId != -1) {
-            update(mId);
-        }
     }
 
     public void update(int id) {
@@ -74,7 +62,7 @@ public class MovieDetailFragment extends Fragment {
                 ((TextView) getActivity().findViewById(R.id.movie_details_rating))
                         .setText("Rating : " + movie.getRating());
                 ((TextView) getActivity().findViewById(R.id.movie_details_budget))
-                        .setText("Bdget : " + movie.getBudget());
+                        .setText("Budget : " + movie.getBudget());
                 ((TextView) getActivity().findViewById(R.id.movie_details_description))
                         .setText(movie.getOverview());
 
@@ -86,12 +74,5 @@ public class MovieDetailFragment extends Fragment {
             }
         });
 
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putInt(CURRENT_ID, mId);
     }
 }
