@@ -2,6 +2,7 @@ package yuriitsap.example.com.movieviewer.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class Page {
     @SerializedName("page")
     private int mNumber;
     @SerializedName("results")
-    private List<Movie> mMovies;
+    private ArrayList<Movie> mMovies;
     @SerializedName("total_pages")
     private int mTotalPages;
     @SerializedName("total_results")
@@ -39,11 +40,11 @@ public class Page {
         mNumber = number;
     }
 
-    public List<Movie> getMovies() {
+    public ArrayList<Movie> getMovies() {
         return mMovies;
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(ArrayList<Movie> movies) {
         mMovies = movies;
     }
 

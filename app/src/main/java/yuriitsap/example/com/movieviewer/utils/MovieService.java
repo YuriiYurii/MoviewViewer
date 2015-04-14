@@ -2,6 +2,7 @@ package yuriitsap.example.com.movieviewer.utils;
 
 import retrofit.Callback;
 import retrofit.http.GET;
+import retrofit.http.Path;
 import yuriitsap.example.com.movieviewer.model.Movie;
 import yuriitsap.example.com.movieviewer.model.Page;
 
@@ -13,7 +14,7 @@ public interface MovieService {
     @GET("/movie/popular?api_key=c776ded64b682b68377f1bee206ea6f7")
     public void getPopularMovies(Callback<Page> page);
 
-    @GET("/movie/550?api_key=c776ded64b682b68377f1bee206ea6f7")
-    public void getMovieById(Callback<Movie> movies);
+    @GET("/movie/{id}?api_key=c776ded64b682b68377f1bee206ea6f7")
+    public void getMovieById(@Path("id") int id, Callback<Movie> movies);
 
 }

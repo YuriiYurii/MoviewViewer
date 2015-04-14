@@ -9,9 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import yuriitsap.example.com.movieviewer.R;
+import yuriitsap.example.com.movieviewer.fragments.MovieListFragment;
 import yuriitsap.example.com.movieviewer.model.Movie;
 
 /**
@@ -20,8 +21,15 @@ import yuriitsap.example.com.movieviewer.model.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHolder> {
 
-    private LinkedList<Movie> mMovies;
+    private static final String BASE_URL = "http://image.tmdb.org/t/p/w92";
+    private ArrayList<Movie> mMovies;
+    private MovieListFragment.OnMovieSelectedListener mOnMovieSelectedListener;
 
+    public MovieAdapter(ArrayList<Movie> movies,
+            MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
+        mOnMovieSelectedListener = onMovieSelectedListener;
+        mMovies = movies;
+    }
 
     @Override
     public MovieItemHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
@@ -33,9 +41,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
     @Override
     public void onBindViewHolder(MovieItemHolder movieItemHolder, int position) {
         Picasso.with(movieItemHolder.mMoviePriviewImage.getContext())
-                .load(mMovies.get(position).getPosterPath())
+                .load(BASE_URL + mMovies.get(position).getPosterPath())
                 .into(movieItemHolder.mMoviePriviewImage);
-        movieItemHolder.
+        movieItemHolder.mMovieTitleTextView.setText(mMovies.get(position).getTitle());
+        movieItemHolder.mMovieRating.setText("Movie rate : " + mMovies.get(position).getRating());
 
     }
 
@@ -44,18 +53,36 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
         return mMovies.size();
     }
 
-    public class MovieItemHolder extends RecyclerView.ViewHolder {
+    public class MovieItemHolder extends RecyclerView.ViewHolder implements
+            View.OnClickListener {
 
         private ImageView mMoviePriviewImage;
         private TextView mMovieTitleTextView;
-        private TextView mMovieDescriptionTextView;
+        private TextView mMovieRating;
+        private View mOverlayView;
 
         public MovieItemHolder(View itemView) {
             super(itemView);
 
+            itemView.setOnClickListener(this);
             mMoviePriviewImage = (ImageView) itemView.findViewById(R.id.movie_picture_preview);
             mMovieTitleTextView = (TextView) itemView.findViewById(R.id.movie_title);
-            mMovieDescriptionTextView = (TextView) itemView.findViewById(R.id.movie_description);
+            mMovieRating = (TextView) itemView.findViewById(R.id.movie_rating);
+            mOverlayView = itemView.findViewById(R.id.overlay_view);
+
         }
+
+        @Override
+        public void onClick(View v) {
+            mOnMovieSelectedListener.onMovieSelected(mMovies.get(getPosition()).getId());
+        }
+    }
+
+    public ArrayList<Movie> getMovies() {
+        return mMovies;
+    }
+
+    public void setMovies(ArrayList<Movie> movies) {
+        mMovies = movies;
     }
 }

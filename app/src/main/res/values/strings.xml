@@ -7,5 +7,6 @@
     <string name="the_movie_db_user_session_param">session_id</string>
     <string name="the_movie_db_api_key">c776ded64b682b68377f1bee206ea6f7</string>
     <string name="the_movie_db_api_user_session">5d16b0edb8e34d59cc1a1c256767b422f45694f4</string>
+    <string name="title_activity_movie_details">MovieDetailsActivity</string>
 
 </resources>

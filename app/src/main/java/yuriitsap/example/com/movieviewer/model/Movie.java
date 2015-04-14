@@ -2,10 +2,14 @@ package yuriitsap.example.com.movieviewer.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by yuriitsap on 13.04.15.
  */
-public class Movie {
+public class Movie implements Parcelable {
+
 
     @SerializedName("id")
     private int mId;
@@ -24,7 +28,19 @@ public class Movie {
     @SerializedName("revenue")
     private int mRevenue;
     @SerializedName("vote_average")
-    private int mRating;
+    private float mRating;
+
+    public Movie(Parcel parcel) {
+        mId = parcel.readInt();
+        mAdult = parcel.readByte() != 0;
+        mBudget = parcel.readInt();
+        mPosterPath = parcel.readString();
+        mImdbId = parcel.readString();
+        mTitle = parcel.readString();
+        mOverview = parcel.readString();
+        mRevenue = parcel.readInt();
+        mRating = parcel.readFloat();
+    }
 
     public int getId() {
         return mId;
@@ -90,7 +106,7 @@ public class Movie {
         mPosterPath = posterPath;
     }
 
-    public int getRating() {
+    public float getRating() {
         return mRating;
     }
 
@@ -151,7 +167,37 @@ public class Movie {
         result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
         result = 31 * result + (mOverview != null ? mOverview.hashCode() : 0);
         result = 31 * result + mRevenue;
-        result = 31 * result + mRating;
         return result;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeByte((byte) (mAdult ? 1 : 0));
+        dest.writeInt(mBudget);
+        dest.writeString(mPosterPath);
+        dest.writeString(mImdbId);
+        dest.writeString(mTitle);
+        dest.writeString(mOverview);
+        dest.writeInt(mRevenue);
+        dest.writeFloat(mRating);
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
 }
