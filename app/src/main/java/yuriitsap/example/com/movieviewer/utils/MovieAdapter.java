@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,52 +26,36 @@ import yuriitsap.example.com.movieviewer.model.Page;
  * Created by yuriitsap on 13.04.15.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final int VIEW_TYPE_ROW = 0;
+    public static final int VIEW_TYPE_SPINNER = 1;
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w92";
     private ArrayList<Movie> mMovies = new ArrayList<>();
     private MovieListFragment.OnMovieSelectedListener mOnMovieSelectedListener;
     private int mSelectedItemPosition = -1;
-    public static int count = 0;
-    private boolean mIsLoading;
+    private int mPagesLoaded;
+
 
     public MovieAdapter() {
-        Log.e("TAG", "count = " + count++);
         loadData(1);
-
-    }
-
-    public void loadData() {
-        mIsLoading = true;
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                mIsLoading = false;
-
-            }
-        }).start();
     }
 
     public void loadData(int page) {
-        mIsLoading = true;
-        MovieClient.getMovieService().getPopularMovies(new Callback<Page>() {
+//        Log.e("TAG", "page = " + page);
+        MovieClient.getMovieService().getPopularMovies(page, new Callback<Page>() {
             @Override
             public void success(Page page, Response response) {
-                mMovies.addAll(page.getMovies());
-                Log.e("TAG", "size = " + mMovies.size());
-                notifyDataSetChanged();
-                mIsLoading = false;
-
+                mPagesLoaded = page.getNumber();
+                for (Movie movie : page.getMovies()) {
+                    mMovies.add(movie);
+                    notifyItemInserted(mMovies.size()-1);
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
+                Log.e("TAG", "error");
 
             }
         });
@@ -78,14 +63,34 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
     }
 
     @Override
-    public MovieItemHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        return new MovieItemHolder(
-                LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.movie_list_item, viewGroup, false));
+    public int getItemViewType(int position) {
+        return (position >= mMovies.size()) ? VIEW_TYPE_SPINNER
+                : VIEW_TYPE_ROW;
     }
 
     @Override
-    public void onBindViewHolder(MovieItemHolder movieItemHolder, int position) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        switch (viewType) {
+            case VIEW_TYPE_ROW:
+                return new MovieItemHolder(
+                        LayoutInflater.from(viewGroup.getContext())
+                                .inflate(R.layout.movie_list_item, viewGroup, false));
+            case VIEW_TYPE_SPINNER:
+                return new ProgressBarHolder(
+                        LayoutInflater.from(viewGroup.getContext())
+                                .inflate(R.layout.progress_bar_row, viewGroup, false));
+        }
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (position >= mMovies.size()) {
+            ((ProgressBarHolder) holder).mProgressBar.setVisibility(View.VISIBLE);
+            return;
+
+        }
+        MovieItemHolder movieItemHolder = (MovieItemHolder) holder;
         Picasso.with(movieItemHolder.mMoviePreviewImage.getContext())
                 .load(BASE_URL + mMovies.get(position).getPosterPath())
                 .into(movieItemHolder.mMoviePreviewImage);
@@ -96,7 +101,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
 
     @Override
     public int getItemCount() {
-        return mMovies.size();
+        return mMovies.size() > 0 ? mMovies.size() + 1 : 0;
+    }
+
+    public class ProgressBarHolder extends RecyclerView.ViewHolder {
+
+        private ProgressBar mProgressBar;
+
+        public ProgressBarHolder(View itemView) {
+            super(itemView);
+            mProgressBar = (ProgressBar) itemView.findViewById(R.id.loading_panel);
+
+        }
     }
 
     public class MovieItemHolder extends RecyclerView.ViewHolder implements
@@ -145,11 +161,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
         mOnMovieSelectedListener = onMovieSelectedListener;
     }
 
-    public boolean isLoading() {
-        return mIsLoading;
+    public int getPagesLoaded() {
+        return mPagesLoaded;
     }
 
-    public void setLoading(boolean isLoading) {
-        mIsLoading = isLoading;
+    public void setPagesLoaded(int pagesLoaded) {
+        mPagesLoaded = pagesLoaded;
     }
 }

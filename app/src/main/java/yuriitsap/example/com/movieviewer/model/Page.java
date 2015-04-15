@@ -3,14 +3,12 @@ package yuriitsap.example.com.movieviewer.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yuriitsap on 13.04.15.
  */
 public class Page {
 
-    public static int count = 0;
     @SerializedName("page")
     private int mNumber;
     @SerializedName("results")
@@ -20,17 +18,6 @@ public class Page {
     @SerializedName("total_results")
     private int mTotalResults;
 
-    public Page() {
-        count++;
-    }
-
-    public static int getCount() {
-        return count;
-    }
-
-    public static void setCount(int count) {
-        Page.count = count;
-    }
 
     public int getNumber() {
         return mNumber;
