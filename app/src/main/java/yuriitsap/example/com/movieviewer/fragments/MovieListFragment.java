@@ -11,8 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import yuriitsap.example.com.movieviewer.R;
+import yuriitsap.example.com.movieviewer.model.Page;
 import yuriitsap.example.com.movieviewer.utils.MovieAdapter;
+import yuriitsap.example.com.movieviewer.utils.MovieClient;
 
 /**
  * Created by yuriitsap on 13.04.15.
@@ -35,9 +42,27 @@ public class MovieListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mMovieAdapter = new MovieAdapter(mOnMovieSelectedListener);
+    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mMovieAdapter.getMovies()
+                    .addAll((ArrayList) savedInstanceState.getParcelableArrayList("MOVIES"));
+        } else {
+            MovieClient.getMovieService().getPopularMovies(new Callback<Page>() {
+                @Override
+                public void success(Page page, Response response) {
+                    Log.e("TAG", "success");
+                    mMovieAdapter.getMovies().addAll(page.getMovies());
+                    mMovieAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("TAG", "Error");
+
+                }
+            });
+        }
     }
 
     @Override
@@ -59,7 +84,18 @@ public class MovieListFragment extends Fragment {
         View view = inflater.inflate(R.layout.recycler_view_layout, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        mMovieAdapter = new MovieAdapter(mOnMovieSelectedListener);
         mRecyclerView.setAdapter(mMovieAdapter);
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.e("TAG", "onSaveInstanceState");
+
+        if (mMovieAdapter.getMovies().size() > 0) {
+            outState.putParcelableArrayList("MOVIES", mMovieAdapter.getMovies());
+        }
     }
 }

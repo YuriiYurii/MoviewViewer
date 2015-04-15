@@ -34,20 +34,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
 
     public MovieAdapter(MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
         mOnMovieSelectedListener = onMovieSelectedListener;
-        MovieClient.getMovieService().getPopularMovies(new Callback<Page>() {
-            @Override
-            public void success(Page page, Response response) {
-                Log.e("TAG", "success");
-                mMovies.addAll(page.getMovies());
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("TAG", "Error");
-
-            }
-        });
     }
 
     @Override
