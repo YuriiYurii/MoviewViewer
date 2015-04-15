@@ -3,6 +3,7 @@ package yuriitsap.example.com.movieviewer.utils;
 import com.squareup.picasso.Picasso;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import yuriitsap.example.com.movieviewer.R;
 import yuriitsap.example.com.movieviewer.fragments.MovieListFragment;
 import yuriitsap.example.com.movieviewer.model.Movie;
+import yuriitsap.example.com.movieviewer.model.Page;
 
 /**
  * Created by yuriitsap on 13.04.15.
@@ -26,9 +31,50 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
     private ArrayList<Movie> mMovies = new ArrayList<>();
     private MovieListFragment.OnMovieSelectedListener mOnMovieSelectedListener;
     private int mSelectedItemPosition = -1;
+    public static int count = 0;
+    private boolean mIsLoading;
 
-    public MovieAdapter(MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
-        mOnMovieSelectedListener = onMovieSelectedListener;
+    public MovieAdapter() {
+        Log.e("TAG", "count = " + count++);
+        loadData(1);
+
+    }
+
+    public void loadData() {
+        mIsLoading = true;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mIsLoading = false;
+
+            }
+        }).start();
+    }
+
+    public void loadData(int page) {
+        mIsLoading = true;
+        MovieClient.getMovieService().getPopularMovies(new Callback<Page>() {
+            @Override
+            public void success(Page page, Response response) {
+                mMovies.addAll(page.getMovies());
+                Log.e("TAG", "size = " + mMovies.size());
+                notifyDataSetChanged();
+                mIsLoading = false;
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
     }
 
     @Override
@@ -86,4 +132,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieItemHol
         return mMovies;
     }
 
+    public void setMovies(ArrayList<Movie> movies) {
+        mMovies = movies;
+    }
+
+    public MovieListFragment.OnMovieSelectedListener getOnMovieSelectedListener() {
+        return mOnMovieSelectedListener;
+    }
+
+    public void setOnMovieSelectedListener(
+            MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
+        mOnMovieSelectedListener = onMovieSelectedListener;
+    }
+
+    public boolean isLoading() {
+        return mIsLoading;
+    }
+
+    public void setLoading(boolean isLoading) {
+        mIsLoading = isLoading;
+    }
 }

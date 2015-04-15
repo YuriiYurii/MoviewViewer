@@ -5,7 +5,6 @@ import com.squareup.picasso.Picasso;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +22,17 @@ import yuriitsap.example.com.movieviewer.utils.MovieClient;
  */
 public class MovieDetailFragment extends Fragment {
 
-    private int mId = -1;
     public final static String CURRENT_ID = "CURRENT_ID";
     private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p/w342";
+    private int mId = -1;
 
-    public MovieDetailFragment() {
+    public static MovieDetailFragment newInstance(int id) {
+        Bundle args = new Bundle();
+        args.putInt(CURRENT_ID, id);
+        MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
+        movieDetailFragment.setArguments(args);
+        return movieDetailFragment;
+
     }
 
     @Override
@@ -49,7 +54,7 @@ public class MovieDetailFragment extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-            Log.e("TAG", "id = " + savedInstanceState.getInt(CURRENT_ID));
+            update(savedInstanceState.getInt(CURRENT_ID));
         }
     }
 
