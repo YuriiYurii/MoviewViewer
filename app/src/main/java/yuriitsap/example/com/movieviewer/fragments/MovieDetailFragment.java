@@ -26,17 +26,13 @@ public class MovieDetailFragment extends Fragment {
     private int mId = -1;
     public final static String CURRENT_ID = "CURRENT_ID";
     private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p/w342";
-    private static int count;
 
     public MovieDetailFragment() {
-        count++;
-        Log.e("TAG", "MovieDetailFragment created = " + count);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        MovieClient.getMovieService().getMovieById(C);
     }
 
     @Nullable
@@ -47,6 +43,14 @@ public class MovieDetailFragment extends Fragment {
             update(getArguments().getInt(CURRENT_ID));
         }
         return inflater.inflate(R.layout.movie_details, container, false);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            Log.e("TAG", "id = " + savedInstanceState.getInt(CURRENT_ID));
+        }
     }
 
     public void update(int id) {
@@ -65,7 +69,6 @@ public class MovieDetailFragment extends Fragment {
                         .setText("Budget : " + movie.getBudget());
                 ((TextView) getActivity().findViewById(R.id.movie_details_description))
                         .setText(movie.getOverview());
-
             }
 
             @Override
@@ -73,6 +76,13 @@ public class MovieDetailFragment extends Fragment {
 
             }
         });
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mId != -1) {
+            outState.putInt(CURRENT_ID, mId);
+        }
     }
 }

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +33,9 @@ public class MovieListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
     private OnMovieSelectedListener mOnMovieSelectedListener;
-    private static int lala = 0;
 
 
     public MovieListFragment() {
-        Log.e("TAG", "MovieListFragment count = " + ++lala);
     }
 
     @Override
@@ -51,14 +48,12 @@ public class MovieListFragment extends Fragment {
             MovieClient.getMovieService().getPopularMovies(new Callback<Page>() {
                 @Override
                 public void success(Page page, Response response) {
-                    Log.e("TAG", "success");
                     mMovieAdapter.getMovies().addAll(page.getMovies());
                     mMovieAdapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("TAG", "Error");
 
                 }
             });
@@ -92,7 +87,6 @@ public class MovieListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.e("TAG", "onSaveInstanceState");
 
         if (mMovieAdapter.getMovies().size() > 0) {
             outState.putParcelableArrayList("MOVIES", mMovieAdapter.getMovies());

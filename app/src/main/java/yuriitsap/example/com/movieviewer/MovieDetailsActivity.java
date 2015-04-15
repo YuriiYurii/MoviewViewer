@@ -14,7 +14,8 @@ public class MovieDetailsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+
+        setContentView(R.layout.details_fragment_activity);
         if (this.getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE) {
             finish();
@@ -23,7 +24,7 @@ public class MovieDetailsActivity extends ActionBarActivity {
             MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
             movieDetailFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.movie_list_container, movieDetailFragment,
+                    .add(R.id.movie_details_container, movieDetailFragment,
                             "details_activity_fragment").commit();
         }
 

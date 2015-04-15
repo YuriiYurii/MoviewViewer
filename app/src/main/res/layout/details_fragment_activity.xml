@@ -4,12 +4,11 @@
               android:layout_height="match_parent"
               android:orientation="horizontal"
               tools:context=".MainActivity">
-    <fragment
-            android:name="yuriitsap.example.com.movieviewer.fragments.MovieListFragment"
-            android:id="@+id/movie_list_container"
+    <FrameLayout
+            android:id="@+id/movie_details_container"
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="match_parent">
-    </fragment>
+    </FrameLayout>
 
 </LinearLayout>

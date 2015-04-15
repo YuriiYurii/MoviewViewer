@@ -24,30 +24,17 @@ public class MainActivity extends ActionBarActivity implements
                     movieDetailFragment,
                     "movie_details_fragment").commit();
         }
-        if (savedInstanceState != null) {
-            return;
-        }
-        MovieListFragment movieListFragment = new MovieListFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.movie_list_container, movieListFragment, "movie_list_fragment").commit();
     }
 
     @Override
     public void onMovieSelected(int id) {
         Bundle bundle = new Bundle();
         bundle.putInt(MovieDetailFragment.CURRENT_ID, id);
+
         if (getResources().getBoolean(R.bool.dual_pane)) {
             MovieDetailFragment movieDetailFragment
                     = (MovieDetailFragment) getSupportFragmentManager()
                     .findFragmentByTag("movie_details_fragment");
-            if (movieDetailFragment == null) {
-                movieDetailFragment = new MovieDetailFragment();
-                movieDetailFragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.movie_details_fragment, movieDetailFragment,
-                                "movie_details_fragment").commit();
-
-            }
             movieDetailFragment.update(id);
         } else {
             Intent intent = new Intent(this, MovieDetailsActivity.class);
