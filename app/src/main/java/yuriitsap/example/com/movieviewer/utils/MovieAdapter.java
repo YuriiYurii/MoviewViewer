@@ -3,7 +3,6 @@ package yuriitsap.example.com.movieviewer.utils;
 import com.squareup.picasso.Picasso;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,42 +30,33 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public static final int VIEW_TYPE_ROW = 0;
     public static final int VIEW_TYPE_SPINNER = 1;
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w92";
+
     private ArrayList<Movie> mMovies = new ArrayList<>();
     private MovieListFragment.OnMovieSelectedListener mOnMovieSelectedListener;
     private int mSelectedItemPosition = -1;
-    private int mPagesLoaded;
-    private boolean mIsLoading = false;
+    private int mPagesLoaded = 0;
 
 
-    public MovieAdapter() {
-        loadData(1);
+    public MovieAdapter(MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
+        mOnMovieSelectedListener = onMovieSelectedListener;
     }
 
-    public void loadData(int page) {
-        mIsLoading = true;
-        MovieClient.getMovieService().getPopularMovies(page, new Callback<Page>() {
+    public void loadData() {
+        mPagesLoaded++;
+        MovieClient.getMovieService().getPopularMovies(mPagesLoaded, new Callback<Page>() {
             @Override
             public void success(Page page, Response response) {
-                mPagesLoaded++;
-                for (Movie movie : page.getMovies()) {
-                    mMovies.add(movie);
-                    notifyItemInserted(mMovies.size() - 1);
-                }
-                mIsLoading = false;
+                mMovies.addAll(page.getMovies());
+                notifyItemRangeInserted(getItemCount(),
+                        mMovies.size() - 1);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e("TAG", "error");
 
             }
         });
 
-    }
-
-    public void loadData() {
-        Log.e("TAG", "pages loaded = " + mPagesLoaded);
-        loadData(mPagesLoaded);
     }
 
     @Override
@@ -93,13 +83,14 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position >= mMovies.size()) {
-            ((ProgressBarHolder) holder).mProgressBar.setVisibility(View.VISIBLE);
+            loadData();
             return;
 
         }
         MovieItemHolder movieItemHolder = (MovieItemHolder) holder;
         Picasso.with(movieItemHolder.mMoviePreviewImage.getContext())
                 .load(BASE_URL + mMovies.get(position).getPosterPath())
+                .placeholder(R.drawable.placeholder)
                 .into(movieItemHolder.mMoviePreviewImage);
         movieItemHolder.mMovieTitleTextView.setText(mMovies.get(position).getTitle());
         movieItemHolder.mMovieRating.setText("Movie rate : " + mMovies.get(position).getRating());
@@ -108,7 +99,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mMovies.size() > 0 ? mMovies.size() + 1 : 0;
+        return mMovies.size() + 1;
     }
 
     public class ProgressBarHolder extends RecyclerView.ViewHolder {
@@ -138,7 +129,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mRow = (LinearLayout) itemView.findViewById(R.id.movie_info_row);
             mMovieTitleTextView = (TextView) itemView.findViewById(R.id.movie_title);
             mMovieRating = (TextView) itemView.findViewById(R.id.movie_rating);
-
         }
 
         @Override
@@ -159,36 +149,11 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         mMovies = movies;
     }
 
-    public MovieListFragment.OnMovieSelectedListener getOnMovieSelectedListener() {
-        return mOnMovieSelectedListener;
-    }
-
-    public void setOnMovieSelectedListener(
-            MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
-        mOnMovieSelectedListener = onMovieSelectedListener;
-    }
-
     public int getSelectedItemPosition() {
         return mSelectedItemPosition;
     }
 
     public void setSelectedItemPosition(int selectedItemPosition) {
         mSelectedItemPosition = selectedItemPosition;
-    }
-
-    public int getPagesLoaded() {
-        return mPagesLoaded;
-    }
-
-    public void setPagesLoaded(int pagesLoaded) {
-        mPagesLoaded = pagesLoaded;
-    }
-
-    public boolean isLoading() {
-        return mIsLoading;
-    }
-
-    public void setLoading(boolean isLoading) {
-        mIsLoading = isLoading;
     }
 }

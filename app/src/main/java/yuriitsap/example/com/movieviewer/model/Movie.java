@@ -115,62 +115,6 @@ public class Movie implements Parcelable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Movie)) {
-            return false;
-        }
-
-        Movie movie = (Movie) o;
-
-        if (mAdult != movie.mAdult) {
-            return false;
-        }
-        if (mBudget != movie.mBudget) {
-            return false;
-        }
-        if (mId != movie.mId) {
-            return false;
-        }
-        if (mRating != movie.mRating) {
-            return false;
-        }
-        if (mRevenue != movie.mRevenue) {
-            return false;
-        }
-        if (mImdbId != null ? !mImdbId.equals(movie.mImdbId) : movie.mImdbId != null) {
-            return false;
-        }
-        if (mOverview != null ? !mOverview.equals(movie.mOverview) : movie.mOverview != null) {
-            return false;
-        }
-        if (mPosterPath != null ? !mPosterPath.equals(movie.mPosterPath)
-                : movie.mPosterPath != null) {
-            return false;
-        }
-        if (mTitle != null ? !mTitle.equals(movie.mTitle) : movie.mTitle != null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = mId;
-        result = 31 * result + (mAdult ? 1 : 0);
-        result = 31 * result + mBudget;
-        result = 31 * result + (mPosterPath != null ? mPosterPath.hashCode() : 0);
-        result = 31 * result + (mImdbId != null ? mImdbId.hashCode() : 0);
-        result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
-        result = 31 * result + (mOverview != null ? mOverview.hashCode() : 0);
-        result = 31 * result + mRevenue;
-        return result;
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }

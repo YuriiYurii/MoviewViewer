@@ -23,29 +23,15 @@ import yuriitsap.example.com.movieviewer.utils.MovieClient;
  */
 public class MovieDetailFragment extends Fragment {
 
-    public final static String CURRENT_ID = "CURRENT_ID";
     private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p/w185";
-    private int mId = -1;
-    public static int count = 0;
 
     public static MovieDetailFragment newInstance(int id) {
+        Log.e("TAG", "create");
         Bundle args = new Bundle();
-        args.putInt(CURRENT_ID, id);
+        args.putInt("CURRENT_ID", id);
         MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
         movieDetailFragment.setArguments(args);
         return movieDetailFragment;
-    }
-
-    public MovieDetailFragment() {
-        Log.e("TAG", "count = " + ++count);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            update(savedInstanceState.getInt(CURRENT_ID));
-        }
     }
 
     @Nullable
@@ -56,35 +42,33 @@ public class MovieDetailFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mId != -1) {
-            outState.putInt(CURRENT_ID, mId);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            MovieClient.getMovieService()
+                    .getMovieById(getArguments().getInt("CURRENT_ID"), new Callback<Movie>() {
+                        @Override
+                        public void success(Movie movie, Response response) {
+                            getView().findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+                            Picasso.with(getActivity())
+                                    .load(BASE_POSTER_URL + movie.getPosterPath())
+                                    .placeholder(R.drawable.placeholder)
+                                    .into((android.widget.ImageView) getView()
+                                            .findViewById(R.id.movie_details_poster_holder));
+                            ((TextView) getView().findViewById(R.id.movie_details_title)).setText(
+                                    movie.getTitle());
+                            ((TextView) getView().findViewById(R.id.movie_details_rating))
+                                    .setText("Rating : " + movie.getRating());
+                            ((TextView) getView().findViewById(R.id.movie_details_budget))
+                                    .setText("Budget : " + movie.getBudget());
+                            ((TextView) getView().findViewById(R.id.movie_details_description))
+                                    .setText(movie.getOverview());
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
+                    });
         }
-    }
-
-    public void update(int id) {
-        mId = id;
-        MovieClient.getMovieService().getMovieById(id, new Callback<Movie>() {
-            @Override
-            public void success(Movie movie, Response response) {
-                Picasso.with(getActivity()).load(BASE_POSTER_URL + movie.getPosterPath())
-                        .into((android.widget.ImageView) getView()
-                                .findViewById(R.id.movie_details_poster_holder));
-                ((TextView) getView().findViewById(R.id.movie_details_title)).setText(
-                        movie.getTitle());
-                ((TextView) getView().findViewById(R.id.movie_details_rating))
-                        .setText("Rating : " + movie.getRating());
-                ((TextView) getView().findViewById(R.id.movie_details_budget))
-                        .setText("Budget : " + movie.getBudget());
-                ((TextView) getView().findViewById(R.id.movie_details_description))
-                        .setText(movie.getOverview());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
     }
 }
