@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import yuriitsap.example.com.movieviewer.utils.MovieAdapter;
  */
 public class MovieListFragment extends Fragment {
 
-
     public interface OnMovieSelectedListener {
 
         void onMovieSelected(int id);
@@ -28,16 +26,12 @@ public class MovieListFragment extends Fragment {
 
     private MovieAdapter mMovieAdapter;
 
-
     public static MovieListFragment newInstance() {
-        Log.e("TAG", "newInstance");
         return new MovieListFragment();
-
     }
 
     @Override
     public void onAttach(Activity activity) {
-
         super.onAttach(activity);
 
         mMovieAdapter = new MovieAdapter((OnMovieSelectedListener) activity);
@@ -58,9 +52,6 @@ public class MovieListFragment extends Fragment {
         recyclerView.setAdapter(mMovieAdapter);
         if (savedInstanceState != null) {
             mMovieAdapter.setMovies(savedInstanceState.<Movie>getParcelableArrayList("MOVIE_LIST"));
-            mMovieAdapter.setSelectedItemPosition(savedInstanceState.getInt("CURRENT_POSITION"));
-        } else {
-            mMovieAdapter.setSelectedItemPosition(-1);
         }
     }
 
@@ -68,6 +59,5 @@ public class MovieListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("MOVIE_LIST", mMovieAdapter.getMovies());
-        outState.putInt("CURRENT_POSITION", mMovieAdapter.getSelectedItemPosition());
     }
 }

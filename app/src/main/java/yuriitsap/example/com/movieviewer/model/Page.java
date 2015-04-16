@@ -11,13 +11,15 @@ public class Page {
 
     @SerializedName("page")
     private int mNumber;
+
     @SerializedName("results")
     private ArrayList<Movie> mMovies;
+
     @SerializedName("total_pages")
     private int mTotalPages;
+
     @SerializedName("total_results")
     private int mTotalResults;
-
 
     public int getNumber() {
         return mNumber;

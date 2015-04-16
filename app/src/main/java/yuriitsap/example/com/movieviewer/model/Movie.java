@@ -10,23 +10,30 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
-
     @SerializedName("id")
     private int mId;
+
     @SerializedName("adult")
     private boolean mAdult;
+
     @SerializedName("budget")
     private int mBudget;
+
     @SerializedName("poster_path")
     private String mPosterPath;
+
     @SerializedName("imdb_id")
     private String mImdbId;
+
     @SerializedName("original_title")
     private String mTitle;
+
     @SerializedName("overview")
     private String mOverview;
+
     @SerializedName("revenue")
     private int mRevenue;
+
     @SerializedName("vote_average")
     private float mRating;
 

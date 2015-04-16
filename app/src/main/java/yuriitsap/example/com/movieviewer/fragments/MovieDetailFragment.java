@@ -26,7 +26,6 @@ public class MovieDetailFragment extends Fragment {
     private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p/w185";
 
     public static MovieDetailFragment newInstance(int id) {
-        Log.e("TAG", "create");
         Bundle args = new Bundle();
         args.putInt("CURRENT_ID", id);
         MovieDetailFragment movieDetailFragment = new MovieDetailFragment();

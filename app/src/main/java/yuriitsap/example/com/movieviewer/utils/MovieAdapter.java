@@ -36,7 +36,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private int mSelectedItemPosition = -1;
     private int mPagesLoaded = 0;
 
-
     public MovieAdapter(MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
         mOnMovieSelectedListener = onMovieSelectedListener;
     }
@@ -85,7 +84,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (position >= mMovies.size()) {
             loadData();
             return;
-
         }
         MovieItemHolder movieItemHolder = (MovieItemHolder) holder;
         Picasso.with(movieItemHolder.mMoviePreviewImage.getContext())
@@ -109,7 +107,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public ProgressBarHolder(View itemView) {
             super(itemView);
             mProgressBar = (ProgressBar) itemView.findViewById(R.id.loading_panel);
-
         }
     }
 
