@@ -10,7 +10,11 @@ import android.util.Log;
 public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListener {
 
     private boolean mIsLoading = false;
-    private int mCurrentPage = 1;
+    private int mCurrentPage;
+
+    protected RecyclerScrollListener(int currentPage) {
+        mCurrentPage = currentPage;
+    }
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -21,11 +25,10 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
     public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
                 .getLayoutManager();
-//        Log.e("TAG",
-//                "linearLayoutManager.getChildCount() = " + linearLayoutManager.getChildCount());
-//        Log.e("TAG", "linearLayoutManager.findFirstVisibleItemPosition() = " + linearLayoutManager
-//                .findFirstVisibleItemPosition());
-//        Log.e("TAG", "linearLayoutManager.getItemCount() = " + linearLayoutManager.getItemCount());
+        if (mCurrentPage == ((MovieAdapter) recyclerView.getAdapter()).getPagesLoaded()) {
+            mIsLoading = false;
+        }
+
         if (linearLayoutManager.getChildCount() + linearLayoutManager
                 .findFirstVisibleItemPosition() == linearLayoutManager.getItemCount()
                 && !mIsLoading) {

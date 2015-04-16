@@ -35,6 +35,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private MovieListFragment.OnMovieSelectedListener mOnMovieSelectedListener;
     private int mSelectedItemPosition = -1;
     private int mPagesLoaded;
+    private boolean mIsLoading = false;
 
 
     public MovieAdapter() {
@@ -42,15 +43,16 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public void loadData(int page) {
-//        Log.e("TAG", "page = " + page);
+        mIsLoading = true;
         MovieClient.getMovieService().getPopularMovies(page, new Callback<Page>() {
             @Override
             public void success(Page page, Response response) {
-                mPagesLoaded = page.getNumber();
+                mPagesLoaded++;
                 for (Movie movie : page.getMovies()) {
                     mMovies.add(movie);
-                    notifyItemInserted(mMovies.size()-1);
+                    notifyItemInserted(mMovies.size() - 1);
                 }
+                mIsLoading = false;
             }
 
             @Override
@@ -60,6 +62,11 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
+    }
+
+    public void loadData() {
+        Log.e("TAG", "pages loaded = " + mPagesLoaded);
+        loadData(mPagesLoaded);
     }
 
     @Override
@@ -161,11 +168,27 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         mOnMovieSelectedListener = onMovieSelectedListener;
     }
 
+    public int getSelectedItemPosition() {
+        return mSelectedItemPosition;
+    }
+
+    public void setSelectedItemPosition(int selectedItemPosition) {
+        mSelectedItemPosition = selectedItemPosition;
+    }
+
     public int getPagesLoaded() {
         return mPagesLoaded;
     }
 
     public void setPagesLoaded(int pagesLoaded) {
         mPagesLoaded = pagesLoaded;
+    }
+
+    public boolean isLoading() {
+        return mIsLoading;
+    }
+
+    public void setLoading(boolean isLoading) {
+        mIsLoading = isLoading;
     }
 }

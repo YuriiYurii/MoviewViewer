@@ -28,12 +28,14 @@ public class MainActivity extends ActionBarActivity implements
     public void onMovieSelected(int id) {
         MovieDetailFragment movieDetailFragment
                 = (MovieDetailFragment) getSupportFragmentManager()
-                .findFragmentByTag("movie_details_fragment");
+                .findFragmentById(R.id.movie_details_container);
         if (movieDetailFragment == null) {
             movieDetailFragment = MovieDetailFragment.newInstance(id);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.movie_details_container, movieDetailFragment,
-                            "movie_details_fragment").addToBackStack(null).commit();
+                            "movie_details_fragment")
+                    .addToBackStack(null)
+                    .commit();
         }
         movieDetailFragment.update(id);
     }

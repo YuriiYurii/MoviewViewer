@@ -13,14 +13,12 @@ import android.view.ViewGroup;
 import yuriitsap.example.com.movieviewer.R;
 import yuriitsap.example.com.movieviewer.model.Movie;
 import yuriitsap.example.com.movieviewer.utils.MovieAdapter;
-import yuriitsap.example.com.movieviewer.utils.RecyclerScrollListener;
 
 /**
  * Created by yuriitsap on 13.04.15.
  */
 public class MovieListFragment extends Fragment {
 
-    private static int count = 0;
 
     public interface OnMovieSelectedListener {
 
@@ -42,13 +40,16 @@ public class MovieListFragment extends Fragment {
 
         mOnMovieSelectedListener = (OnMovieSelectedListener) activity;
         mMovieAdapter.setOnMovieSelectedListener(mOnMovieSelectedListener);
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (savedInstanceState != null) {
             mMovieAdapter.setMovies(savedInstanceState.<Movie>getParcelableArrayList("MOVIE_LIST"));
+            mMovieAdapter.setSelectedItemPosition(savedInstanceState.getInt("CURRENT_POSITION"));
         }
     }
 
@@ -61,11 +62,17 @@ public class MovieListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(mMovieAdapter);
         recyclerView
-                .setOnScrollListener(new RecyclerScrollListener() {
+                .setOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
-                    public void loadMovies(int page) {
-                        mMovieAdapter.loadData(page);
-
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
+                                .getLayoutManager();
+                        if (linearLayoutManager.getChildCount() + linearLayoutManager
+                                .findFirstVisibleItemPosition() == linearLayoutManager
+                                .getItemCount()
+                                && !mMovieAdapter.isLoading()) {
+                            mMovieAdapter.loadData();
+                        }
                     }
                 });
         return view;
@@ -75,5 +82,6 @@ public class MovieListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("MOVIE_LIST", mMovieAdapter.getMovies());
+        outState.putInt("CURRENT_POSITION", mMovieAdapter.getSelectedItemPosition());
     }
 }
