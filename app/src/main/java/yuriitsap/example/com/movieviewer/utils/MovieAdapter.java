@@ -33,7 +33,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private ArrayList<Movie> mMovies = new ArrayList<>();
     private MovieListFragment.OnMovieSelectedListener mOnMovieSelectedListener;
-    private int mSelectedItemPosition = -1;
     private int mPagesLoaded = 0;
 
     public MovieAdapter(MovieListFragment.OnMovieSelectedListener onMovieSelectedListener) {
@@ -55,7 +54,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             }
         });
-
     }
 
     @Override
@@ -92,7 +90,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 .into(movieItemHolder.mMoviePreviewImage);
         movieItemHolder.mMovieTitleTextView.setText(mMovies.get(position).getTitle());
         movieItemHolder.mMovieRating.setText("Movie rate : " + mMovies.get(position).getRating());
-        movieItemHolder.mRow.setActivated(position == mSelectedItemPosition);
     }
 
     @Override
@@ -131,10 +128,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @Override
         public void onClick(View v) {
             mOnMovieSelectedListener.onMovieSelected(mMovies.get(getPosition()).getId());
-            int previousPosition = mSelectedItemPosition;
-            mSelectedItemPosition = getPosition();
-            notifyItemChanged(getPosition());
-            notifyItemChanged(previousPosition);
         }
     }
 
@@ -144,13 +137,5 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setMovies(ArrayList<Movie> movies) {
         mMovies = movies;
-    }
-
-    public int getSelectedItemPosition() {
-        return mSelectedItemPosition;
-    }
-
-    public void setSelectedItemPosition(int selectedItemPosition) {
-        mSelectedItemPosition = selectedItemPosition;
     }
 }
