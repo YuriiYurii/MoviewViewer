@@ -3,7 +3,6 @@ package yuriitsap.example.com.movieviewer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
-
 import yuriitsap.example.com.movieviewer.fragments.MovieDetailFragment;
 import yuriitsap.example.com.movieviewer.fragments.MovieListFragment;
 

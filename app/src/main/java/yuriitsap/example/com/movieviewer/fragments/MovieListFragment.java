@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import yuriitsap.example.com.movieviewer.R;
 import yuriitsap.example.com.movieviewer.model.Movie;
 import yuriitsap.example.com.movieviewer.utils.MovieAdapter;
