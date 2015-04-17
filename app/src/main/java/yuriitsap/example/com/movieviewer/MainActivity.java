@@ -25,10 +25,17 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public void onMovieSelected(int id) {
-        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.movie_details_container, MovieDetailFragment.newInstance(id))
-                .addToBackStack(null)
-                .commit();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager()
+                    .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_details_container, MovieDetailFragment.newInstance(id))
+                    .commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.movie_details_container, MovieDetailFragment.newInstance(id))
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 }
